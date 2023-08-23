@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+	xmlns:tx="http://www.springframework.org/schema/tx"
+
+	xmlns:aop="http://www.springframework.org/schema/aop"
+
+	xmlns:epp="http://www.ospyn.com/schema/epp"
+
+	xsi:schemaLocation="
+
+       http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+
+       http://www.springframework.org/schema/tx
+
+http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+
+       http://www.springframework.org/schema/aop
+
+http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+
+       http://www.ospyn.com/schema/epp
+
+http://www.ospyn.com/schema/epp/epp.xsd">
+
+
+
+	<!-- Core platform services -->
+
+
+
+
+
+	<aop:aspectj-autoproxy />
+
+
+
+	<bean name="clickConfig"
+
+		class="com.ospyn.nano.web.config.click.ClickConfigFactoryBean" />
+
+
+
+	<epp:config id="epp" charset="UTF-8">
+
+		<epp:pages package="com.ospyn.nano.web.page"
+
+			automapping="true">
+
+
+
+		</epp:pages>
+
+		<epp:pages package="com.ospyn.{1}.{2}.page" automapping="true"></epp:pages>
+
+		
+
+		<epp:pages package="com.ospyn.emp.page" automapping="true"></epp:pages>
+
+		
+
+		<epp:page-interceptor
+
+			classname="com.ospyn.nano.security.SecurityInterceptor"
+
+			scope="application">
+
+		</epp:page-interceptor>
+
+	</epp:config>
+
+	<bean name="moduleConfig"
+
+		class="com.ospyn.nano.web.config.ModuleConfigFactoryBean"></bean>
+
+
+
+
+
+	<bean name="logService"
+
+		class="com.ospyn.nano.log.service.ClickLog4JLogService" />
+
+
+
+	<bean name="fileUploadService"
+
+		class="org.apache.click.service.CommonsFileUploadService" />
+
+
+
+	<bean name="templateService"
+
+		class="org.apache.click.service.VelocityTemplateService" />
+
+
+
+	<bean name="resourceService"
+
+		class="org.apache.click.service.ClickResourceService" />
+
+
+
+	<bean name="cacheManagerService"
+
+		class="com.ospyn.nano.cache.service.JCSCacheManagerServiceImpl" />
+
+
+
+
+
+	<bean name="lifecycleBeanPostProcessor"
+
+		class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+<!--  
+
+	<bean id="propertyConfigurer"
+
+
+
+		class="com.ospyn.nano.util.EncryptionSupportPropertyPlaceholderConfigurer">
+
+
+
+		<property name="securityService" ref="securityService" />
+
+
+
+		<property name="locations">
+
+
+
+			<list>
+
+
+
+				<value>classpath:jdbc.properties</value>
+
+
+
+				<value>classpath:nano-sample.properties</value>
+
+
+
+				<value>classpath:click-page.properties</value>
+
+
+
+				<value>classpath:nano.properties</value>
+
+
+
+
+
+			</list>
+
+
+
+		</property>
+
+
+
+		<property name="encryptedKeys">
+
+
+
+			<list>
+
+
+
+				<value>database.password</value>
+
+
+
+			</list>
+
+
+
+		</property>
+
+
+
+	</bean>
+
+
+
+	<bean name="platformService"
+
+		class="com.ospyn.nano.epp.service.PlatformServiceImpl">
+
+
+
+		<property name="dbService" ref="databaseService" />
+
+
+
+	</bean>-->
+
+
+
+
+
+	<!-- Security configuration 
+
+	<bean name="securityService"
+
+		class="com.ospyn.nano.security.service.DefaultSecurityService" />
+
+
+
+	<bean name="securityCacheManager"
+
+		class="com.ospyn.nano.security.service.SecurityCacheManager">
+
+
+
+		<property name="cacheManagerService"
+
+			ref="cacheManagerService" />
+
+
+
+	</bean>
+
+
+
+	<bean name="userMgmtService"
+
+		class="com.ospyn.nano.security.service.DbUserMgmtService">-->
+
+
+
+		<!-- <property name="userClass" value="com.ospyn.nano.security.User" /> 
+
+
+
+		<property name="dbService" ref="databaseService"></property>
+
+
+
+
+
+		<property name="securityService" ref="securityService"></property>
+
+
+
+		<property name="platformService" ref="platformService" />
+
+
+
+		<property name="passwordResetLinkActiveDuration" value="30" />
+
+
+
+		<property name="cacheManagerService"
+
+			ref="cacheManagerService" />
+
+
+
+		<property name="isOrgsAvailableInCache" value="true" />
+
+
+
+		<property name="cacheRegionName" value="org" />
+
+
+
+		<property name="orgCacheLookupName" value="organization" />
+
+
+
+	</bean>
+
+
+
+	<bean name="credentialsMatcher"
+
+		class="org.apache.shiro.authc.credential.Md5CredentialsMatcher">
+
+
+
+		<property name="storedCredentialsHexEncoded" value="false" />
+
+
+
+		<property name="hashSalted" value="true" />
+
+
+
+		<property name="hashIterations" value="99" />
+
+
+
+	</bean>
+
+
+
+	<bean name="defaultRealm" class="com.ospyn.nano.security.Realm">
+
+
+
+		<property name="credentialsMatcher" ref="credentialsMatcher" />
+
+
+
+		<property name="userMgmtService" ref="userMgmtService" />
+
+
+
+		<property name="csrfTockenValidationRequired" value="true" />
+
+
+
+		<property name="authenticationTokenClass"
+
+			value="com.ospyn.nano.security.NanoToken" />
+
+
+
+	</bean>
+
+
+
+	<bean name="securityManager"
+
+		class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">-->
+
+
+
+		<!-- Single realm app. If you have multiple realms, use the 'realms' property 
+
+			instead. 
+
+		<property name="realm" ref="defaultRealm" />
+
+
+
+		<property name="authenticator.authenticationListeners">
+
+			<set>
+
+				<bean name="loginListener"
+
+					class="com.ospyn.nano.security.LoginListener">
+
+
+
+					<property name="userMgmtService" ref="userMgmtService" />
+
+
+
+					<property name="moduleConfig" ref="moduleConfig" />
+
+
+
+					<property name="enableLoginAudit" value="true" />
+
+
+
+					<property name="enableExcessiveLoginAttemptCheck"
+
+						value="true" />
+
+
+
+					<property name="allowedNoOfFailedAttempts" value="5" />
+
+
+
+				</bean>
+
+			</set>
+
+		</property>
+
+
+
+		<property name="cacheManager" ref="securityCacheManager" />
+
+
+
+	</bean>
+
+
+
+	<bean name="authc"
+
+		class="com.ospyn.nano.security.NanoAuthenticationFilter">
+
+		<property name="moduleConfig" ref="moduleConfig"></property>
+
+		<property name="cacheManagerService"
+
+			ref="cacheManagerService"></property>
+
+		<property name="userMgmtService" ref="userMgmtService" />
+
+		<property name="enableExcessiveLoginAttemptCheck"
+
+			value="true" />
+
+		<property name="allowedNoOfFailedAttempts" value="5" />
+
+		<property name="enableLoginAudit" value="true" />
+
+		<property name="csrfTockenValidationRequired" value="true" />
+
+
+
+	</bean>
+
+
+
+	<bean name="shiroFilter"
+
+
+
+		class="com.ospyn.nano.security.web.config.ModuleAwareShiroFilterFactoryBean">
+
+		<property name="securityManager" ref="securityManager" />
+
+		<!-- override these for application-specific URLs if you like: <property 
+
+			name="loginUrl" value="/login.jsp"/> <property name="successUrl" value="/home.jsp"/> 
+
+			<property name="unauthorizedUrl" value="/unauthorized.jsp"/> -->
+
+		<!-- The 'filters' property is not necessary since any declared javax.servlet.Filter 
+
+			bean -->
+
+		<!-- defined will be automatically acquired and available via its beanName 
+
+			in chain -->
+
+		<!-- definitions, but you can perform instance overrides or name aliases 
+
+			here if you like: -->
+
+		<!-- <property name="filters"> <util:map> <entry key="anAlias" value-ref="someFilter"/> 
+
+			</util:map> </property> -->
+
+
+
+		<!--  <property name="loginUrl" value="/home.htm" />
+
+		<property name="successUrl" value="/home.htm" />
+
+		<property name="filterChainDefinitions">
+
+			<value>
+
+				/** = anon
+
+			</value>
+
+		</property>
+
+		<property name="filters">
+
+
+
+			<map>
+
+				<entry key="authc" value-ref="authc"></entry>
+
+			</map>
+
+
+
+		</property>
+
+
+
+	</bean>-->
+
+
+
+	<!-- Database configuration 
+
+	<import resource="dao-config.xml" />-->
+
+
+
+	<bean id="txManager"
+
+
+
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+
+
+
+		<property name="dataSource" ref="dataSource" />
+
+
+
+	</bean>
+
+
+
+	<tx:annotation-driven
+
+		transaction-manager="txnManager" />
+
+
+
+
+
+	<bean name="readDatabaseService"
+
+		class="com.ospyn.nano.db.service.DefaultDatabaseService">
+
+
+
+		<property name="dataSource" ref="readDataSource" />
+
+
+
+	</bean>
+
+	<!--  
+
+	<bean name="databaseService"
+
+		class="com.ospyn.nano.db.service.EntityDatabaseService">
+
+
+
+		<property name="dataSource" ref="dataSource" />
+
+		<property name="dbService" ref="databaseService" />
+
+		<property name="checkSumHashService" ref="bCryptHashService" />
+
+		<property name="securityService" ref="securityService"></property>
+
+		<property name="checkEnabled" value="false"></property>
+
+	</bean>
+
+	<bean name="bCryptHashService"
+
+		class="com.ospyn.nano.db.service.BCryptHashServiceImpl">
+
+		<property name="securityService" ref="securityService"></property>
+
+	</bean>
+
+
+
+
+
+	<bean name="staffDetailsService"
+
+		class="com.ospyn.sam.stf.service.StaffDetailsServiceImpl">
+
+		<property name="databaseService" ref="databaseService"></property>
+
+	</bean>
+
+
+
+	<bean name="collegeService"
+
+		class="com.ospyn.sam.clg.service.CollegeServiceImpl">
+
+		<property name="databaseService" ref="databaseService"></property>
+
+	</bean>
+
+	
+
+	<bean name="employeeService"
+
+		class="com.ospyn.comp.emp.service.EmployeeServiceImpl">
+
+		<property name="databaseService" ref="databaseService"></property>
+
+	</bean>
+
+
+
+	<bean name="branchDetailsService"
+
+		class="com.ospyn.sam.bch.service.BranchDetailsServiceImpl">
+
+		<property name="databaseService" ref="databaseService"></property>
+
+	</bean>
+
+
+
+	<bean name="studentService"
+
+		class="com.ospyn.sam.stu.service.StudentServiceImpl">
+
+		<property name="databaseService" ref="databaseService"></property>
+
+	</bean>
+
+
+
+	<bean name="fileHandler"
+
+		class="com.ospyn.core.service.FileSystemFileHandler"></bean>
+
+
+
+	<bean name="ospynFsFileHandler"
+
+		class="com.ospyn.core.service.OspynFSFileHandler"></bean>-->
+
+
+
+</beans>
